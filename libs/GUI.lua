@@ -46,7 +46,7 @@ function GUI.updateSelection()
 			GUI.selection = GUI.selection -1
 			GUI.time = 0
 		end
-	elseif (get_key_pressed(Keys.Space)) then
+	elseif (get_key_pressed(Keys.NumPad5)) then
 		if(type(GUI.GUI[GUI.selection +1]["func"]) == "function") then
 			GUI.GUI[GUI.selection +1]["func"]()
 		else
