@@ -4,11 +4,13 @@ GUI.buttonCount = 0
 GUI.loaded = false
 GUI.selection = 0
 GUI.time = 0
-function GUI.addButton(name, func, xmin, xmax, ymin, ymax)
+GUI.hidden = false
+function GUI.addButton(name, func,args, xmin, xmax, ymin, ymax)
 	print("Added Button"..name )
 	GUI.GUI[GUI.buttonCount +1] = {}
 	GUI.GUI[GUI.buttonCount +1]["name"] = name
 	GUI.GUI[GUI.buttonCount+1]["func"] = func
+	GUI.GUI[GUI.buttonCount+1]["args"] = args
 	GUI.GUI[GUI.buttonCount+1]["active"] = false
 	GUI.GUI[GUI.buttonCount+1]["xmin"] = xmin
 	GUI.GUI[GUI.buttonCount+1]["ymin"] = ymin * (GUI.buttonCount + 0.01) +0.02
@@ -23,15 +25,17 @@ function GUI.init()
 	GUI.loaded = true
 end
 function GUI.tick()
-	if( GUI.time == 0) then
-		GUI.time = GAMEPLAY.GET_GAME_TIMER()
-	end
-	if((GAMEPLAY.GET_GAME_TIMER() - GUI.time)> 100) then
-		GUI.updateSelection()
-	end	
-	GUI.renderGUI()	
-	if(not GUI.loaded ) then
-		GUI.init()	 
+	if(not GUI.hidden)then
+		if( GUI.time == 0) then
+			GUI.time = GAMEPLAY.GET_GAME_TIMER()
+		end
+		if((GAMEPLAY.GET_GAME_TIMER() - GUI.time)> 100) then
+			GUI.updateSelection()
+		end	
+		GUI.renderGUI()	
+		if(not GUI.loaded ) then
+			GUI.init()	 
+		end
 	end
 end
 
@@ -46,9 +50,9 @@ function GUI.updateSelection()
 			GUI.selection = GUI.selection -1
 			GUI.time = 0
 		end
-	elseif (get_key_pressed(Keys.NumPad5)) then
+	elseif (get_key_pressed(Keys.Space)) then
 		if(type(GUI.GUI[GUI.selection +1]["func"]) == "function") then
-			GUI.GUI[GUI.selection +1]["func"]()
+			GUI.GUI[GUI.selection +1]["func"](GUI.GUI[GUI.selection +1]["args"])
 		else
 			print(type(GUI.GUI[GUI.selection]["func"]))
 		end
